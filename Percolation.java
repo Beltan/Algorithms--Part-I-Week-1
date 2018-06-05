@@ -36,10 +36,8 @@ public class Percolation {
 		checkArguments(row, col);
 
 		if (!isOpen(row, col)) {
-			grid[row - 1][col - 1] = true;
 
 			int fieldIndex = getFieldIndexInQuickUnionStructure(row, col);
-			int neighbourField;
 
 			if (row == 1) {
 				quickUnionStructure.union(virtualTopSite, fieldIndex);
@@ -61,6 +59,7 @@ public class Percolation {
 				unionNeighbour(row + 1, col, fieldIndex);
 			}
 
+			grid[row - 1][col - 1] = true;
 			++numOpenSites;
 		}
 	}
