@@ -49,24 +49,16 @@ public class Percolation {
 				quickUnionStructure.union(virtualBottomSite, fieldIndex);
 			}
 			if (col != 1 && isOpen(row, col - 1)) {
-				neighbourField = getFieldIndexInQuickUnionStructure(row, col - 1);
-				quickUnionStructure.union(neighbourField, fieldIndex);
-				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
+				unionNeighbour(row, col - 1, fieldIndex);
 			}
 			if (col != gridSize && isOpen(row, col + 1)) {
-				neighbourField = getFieldIndexInQuickUnionStructure(row, col + 1);
-				quickUnionStructure.union(neighbourField, fieldIndex);
-				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
+				unionNeighbour(row, col + 1, fieldIndex);
 			}
 			if (row != 1 && isOpen(row - 1, col)) {
-				neighbourField = getFieldIndexInQuickUnionStructure(row - 1, col);
-				quickUnionStructure.union(neighbourField, fieldIndex);
-				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
+				unionNeighbour(row - 1, col, fieldIndex);
 			}
 			if (row != gridSize && isOpen(row + 1, col)) {
-				neighbourField = getFieldIndexInQuickUnionStructure(row + 1, col);
-				quickUnionStructure.union(neighbourField, fieldIndex);
-				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
+				unionNeighbour(row + 1, col, fieldIndex);
 			}
 
 			++numOpenSites;
@@ -103,10 +95,16 @@ public class Percolation {
 		return quickUnionStructure.connected(virtualTopSite, virtualBottomSite);
 	}
 	
-	private boolean checkArguments(int row, int col) {
+	private void checkArguments(int row, int col) {
 		if (row <= 0 || col <= 0 || row > gridSize || col > gridSize) {
 			throw new IllegalArgumentException("Both arguments need to be bigger than 0 and smaller than n");
 		}
+	}
+	
+	private void unionNeighbour(int row, int col, int fieldIndex) {
+		neighbourField = getFieldIndexInQuickUnionStructure(row, col);
+		quickUnionStructure.union(neighbourField, fieldIndex);
+		quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
 	}
 	
 	private int getFieldIndexInQuickUnionStructure(int row, int col) {
