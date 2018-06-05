@@ -101,7 +101,7 @@ public class Percolation {
 	}
 	
 	private void unionNeighbour(int row, int col, int fieldIndex) {
-		neighbourField = getFieldIndexInQuickUnionStructure(row, col);
+		int neighbourField = getFieldIndexInQuickUnionStructure(row, col);
 		quickUnionStructure.union(neighbourField, fieldIndex);
 		quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
 	}
