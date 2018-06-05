@@ -33,14 +33,13 @@ public class Percolation {
 	// open site (row, col) if it is not open already
 	public void open(int row, int col) {
 
-		if (row <= 0 || col <= 0 || row > gridSize || col > gridSize) {
-			throw new IllegalArgumentException("Both arguments need to be bigger than 0 and smaller than n");
-		}
+		checkArguments(row, col);
 
 		if (!isOpen(row, col)) {
 			grid[row - 1][col - 1] = true;
 
 			int fieldIndex = getFieldIndexInQuickUnionStructure(row, col);
+			int neighbourField;
 
 			if (row == 1) {
 				quickUnionStructure.union(virtualTopSite, fieldIndex);
@@ -50,20 +49,24 @@ public class Percolation {
 				quickUnionStructure.union(virtualBottomSite, fieldIndex);
 			}
 			if (col != 1 && isOpen(row, col - 1)) {
-				quickUnionStructure.union(getFieldIndexInQuickUnionStructure(row, col - 1), fieldIndex);
-				quickUnionStructureForIsFull.union(getFieldIndexInQuickUnionStructure(row, col - 1), fieldIndex);
+				neighbourField = getFieldIndexInQuickUnionStructure(row, col - 1);
+				quickUnionStructure.union(neighbourField, fieldIndex);
+				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
 			}
 			if (col != gridSize && isOpen(row, col + 1)) {
-				quickUnionStructure.union(getFieldIndexInQuickUnionStructure(row, col + 1), fieldIndex);
-				quickUnionStructureForIsFull.union(getFieldIndexInQuickUnionStructure(row, col + 1), fieldIndex);
+				neighbourField = getFieldIndexInQuickUnionStructure(row, col + 1);
+				quickUnionStructure.union(neighbourField, fieldIndex);
+				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
 			}
 			if (row != 1 && isOpen(row - 1, col)) {
-				quickUnionStructure.union(getFieldIndexInQuickUnionStructure(row - 1, col), fieldIndex);
-				quickUnionStructureForIsFull.union(getFieldIndexInQuickUnionStructure(row - 1, col), fieldIndex);
+				neighbourField = getFieldIndexInQuickUnionStructure(row - 1, col);
+				quickUnionStructure.union(neighbourField, fieldIndex);
+				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
 			}
 			if (row != gridSize && isOpen(row + 1, col)) {
-				quickUnionStructure.union(getFieldIndexInQuickUnionStructure(row + 1, col), fieldIndex);
-				quickUnionStructureForIsFull.union(getFieldIndexInQuickUnionStructure(row + 1, col), fieldIndex);
+				neighbourField = getFieldIndexInQuickUnionStructure(row + 1, col);
+				quickUnionStructure.union(neighbourField, fieldIndex);
+				quickUnionStructureForIsFull.union(neighbourField, fieldIndex);
 			}
 
 			++numOpenSites;
@@ -73,9 +76,7 @@ public class Percolation {
 	// is site (row, col) open?
 	public boolean isOpen(int row, int col) {
 
-		if (row <= 0 || col <= 0 || row > gridSize || col > gridSize) {
-			throw new IllegalArgumentException("Both arguments need to be bigger than 0 and smaller than n");
-		}
+		checkArguments(row, col);
 
 		return grid[row - 1][col - 1];
 	}
@@ -83,9 +84,7 @@ public class Percolation {
 	// is site (row, col) full?
 	public boolean isFull(int row, int col) {
 
-		if (row <= 0 || col <= 0 || row > gridSize || col > gridSize) {
-			throw new IllegalArgumentException("Both arguments need to be bigger than 0 and smaller than n");
-		}
+		checkArguments(row, col);
 
 		if (isOpen(row, col)) {
 			int fieldIndex = getFieldIndexInQuickUnionStructure(row, col);
@@ -103,7 +102,13 @@ public class Percolation {
 	public boolean percolates() {
 		return quickUnionStructure.connected(virtualTopSite, virtualBottomSite);
 	}
-
+	
+	private boolean checkArguments(int row, int col) {
+		if (row <= 0 || col <= 0 || row > gridSize || col > gridSize) {
+			throw new IllegalArgumentException("Both arguments need to be bigger than 0 and smaller than n");
+		}
+	}
+	
 	private int getFieldIndexInQuickUnionStructure(int row, int col) {
 		return (row - 1) * gridSize + col;
 	}
